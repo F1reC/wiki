@@ -75,20 +75,36 @@ const ArticleList = () => {
 
   const fetchCategories = async () => {
     try {
-      const response = await categoriesApi.getCategories();
+      const response = await categoriesApi.getCategories({ pageSize: 100 });
       if (response.code === '200' && response.data) {
-        setCategories(response.data.list);
+        const categoryList = response.data.list || response.data.records;
+        if (categoryList) {
+          setCategories(categoryList);
+        } else {
+          setCategories([]);
+          console.error('Failed to fetch categories: list or records not found in response data');
+        }
+      } else {
+        console.error('Failed to fetch categories:', response.msg);
       }
     } catch (err) {
-      console.error('获取分类列表失败', err);
+      console.error('Error fetching categories:', err);
     }
   };
 
   const fetchTags = async () => {
     try {
-      const response = await tagsApi.getTags();
+      const response = await tagsApi.getTags({ pageSize: 100 });
       if (response.code === '200' && response.data) {
-        setTags(response.data.list);
+        const tagList = response.data.list || response.data.records;
+        if (tagList) {
+          setTags(tagList);
+        } else {
+          setTags([]);
+          console.error('Failed to fetch tags: list or records not found in response data');
+        }
+      } else {
+        console.error('Failed to fetch tags:', response.msg);
       }
     } catch (err) {
       console.error('获取标签列表失败', err);
@@ -99,7 +115,7 @@ const ArticleList = () => {
     fetchArticles();
     fetchCategories();
     fetchTags();
-  }, [pagination.pageNum, categoryId, tagId, sort, order]);
+  }, [pagination.pageNum, categoryId, tagId, /* keyword, */ sort, order]);
 
   const handleSearch = () => {
     setPagination(prev => ({ ...prev, pageNum: 1 }));
