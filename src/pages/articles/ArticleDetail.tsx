@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useRef } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { 
   Edit, 
@@ -27,6 +27,8 @@ const ArticleDetail = () => {
   const [commentError, setCommentError] = useState<string | null>(null);
   const [likeSuccess, setLikeSuccess] = useState<string | null>(null);
 
+  const viewedArticleIdRef = useRef<string | null>(null);
+
   const currentUserId = 1;
 
   const fetchArticle = async () => {
@@ -37,7 +39,10 @@ const ArticleDetail = () => {
       const response = await articlesApi.getArticleById(parseInt(id));
       if (response.code === '200' && response.data) {
         setArticle(response.data);
-        await articlesApi.viewArticle(parseInt(id));
+        if (viewedArticleIdRef.current !== id) {
+          await articlesApi.viewArticle(parseInt(id));
+          viewedArticleIdRef.current = id;
+        }
       } else {
         setError(response.msg || 'Failed to fetch article details');
       }
