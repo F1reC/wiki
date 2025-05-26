@@ -14,7 +14,7 @@ export interface PageInfo<T> {
   total: number;
   pages: number;
   list: T[];      // 通常用于文章列表等
-  records?: T[]; // 用于兼容后端可能返回 'records' 的情况 (如分类、标签)
+  records?: T[];  // 重新添加 records 以兼容评论接口等
   isFirstPage: boolean;
   isLastPage: boolean;
 }
@@ -74,6 +74,16 @@ export interface ArticleUpdateRequest {
   categoryId: number;
   tag_ids?: number[]; // API expects tag_ids
   status: string; // e.g., "published", "draft"
+}
+
+// 评论接口特定的分页信息结构 (根据实际API响应)
+export interface CommentPageInfo {
+  records: Comment[];
+  total: number;
+  size: number;    // Corresponds to pageSize in PageInfo
+  current: number; // Corresponds to pageNum in PageInfo
+  pages: number;
+  // Fields like list, pageNum, pageSize, isFirstPage, isLastPage are NOT directly in this API response
 }
 
 // 你可以根据需要在此文件中添加其他类型定义，例如：

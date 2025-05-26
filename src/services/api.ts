@@ -11,7 +11,8 @@ import {
   ArticleUpdateRequest,
   CommentCreationRequest,
   LikeResult,
-  ViewResult
+  ViewResult,
+  CommentPageInfo
 } from '../types';
 
 const API_BASE_URL = 'http://localhost:8080/api';
@@ -71,11 +72,32 @@ export const articlesApi = {
 
 export const commentsApi = {
   getComments: async (articleId: number, params?: { page?: number; pageSize?: number }) => {
-    const response = await api.get<BaseResponse<PageInfo<Comment>>>(
+    const res = await api.get<BaseResponse<any>>(
       `/articles/${articleId}/comments`,
       { params }
     );
-    return response.data;
+
+    let processedData: PageInfo<Comment> | null = null;
+
+    if (res.data && res.data.data) {
+      const rawPageInfo = res.data.data as CommentPageInfo;
+      
+      processedData = {
+        list: rawPageInfo.records || [],
+        pageNum: rawPageInfo.current,
+        pageSize: rawPageInfo.size,
+        total: rawPageInfo.total,
+        pages: rawPageInfo.pages,
+        isFirstPage: rawPageInfo.current === 1,
+        isLastPage: rawPageInfo.current === rawPageInfo.pages || rawPageInfo.pages === 0,
+      };
+    }
+
+    return {
+      code: res.data?.code || "",
+      msg: res.data?.msg || "",
+      data: processedData,
+    } as BaseResponse<PageInfo<Comment>>;
   },
 
   createComment: async (articleId: number, comment: CommentCreationRequest) => {
