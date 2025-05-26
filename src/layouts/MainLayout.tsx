@@ -7,7 +7,8 @@ import {
   FolderTree, 
   Menu, 
   X,
-  MessageSquare
+  MessageSquare,
+  UserCog
 } from 'lucide-react';
 import { Button } from '../components/ui/button';
 import { cn } from '../lib/utils';
@@ -25,6 +26,7 @@ const MainLayout = ({ children }: MainLayoutProps) => {
     { path: '/tags', label: 'Tags', icon: <Tag className="mr-2 h-4 w-4" /> },
     { path: '/comments', label: 'Comments', icon: <MessageSquare className="mr-2 h-4 w-4" /> },
     { path: '/stats', label: 'Statistics', icon: <LayoutDashboard className="mr-2 h-4 w-4" /> },
+    { path: '/identity', label: 'Identity Management', icon: <UserCog className="mr-2 h-4 w-4" /> },
   ];
 
   return (

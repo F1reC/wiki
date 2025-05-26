@@ -57,37 +57,45 @@ export const mockCategories: Category[] = [
     name: '订单管理',
     description: '关于订单处理、退款等相关知识',
     parentId: null,
-    sortOrder: 10
+    sortOrder: 10,
+    createdAt: '2023-01-01T00:00:00Z',
+    updatedAt: '2023-01-01T00:00:00Z'
   },
   {
     id: 2,
     name: '客户服务',
     description: '客户沟通、投诉处理等服务指南',
     parentId: null,
-    sortOrder: 20
+    sortOrder: 20,
+    createdAt: '2023-01-01T00:00:00Z',
+    updatedAt: '2023-01-01T00:00:00Z'
   },
   {
     id: 3,
     name: '质量控制',
     description: '产品质量标准和检查流程',
     parentId: null,
-    sortOrder: 30
+    sortOrder: 30,
+    createdAt: '2023-01-01T00:00:00Z',
+    updatedAt: '2023-01-01T00:00:00Z'
   },
   {
     id: 4,
     name: '退款流程',
     description: '详细的退款处理步骤',
     parentId: 1,
-    sortOrder: 10
+    sortOrder: 10,
+    createdAt: '2023-01-01T00:00:00Z',
+    updatedAt: '2023-01-01T00:00:00Z'
   }
 ];
 
 export const mockTags: Tag[] = [
-  { id: 1, name: '退款' },
-  { id: 2, name: '订单处理' },
-  { id: 3, name: '客户投诉' },
-  { id: 4, name: '服务质量' },
-  { id: 5, name: '质量标准' }
+  { id: 1, name: '退款', createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' },
+  { id: 2, name: '订单处理', createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' },
+  { id: 3, name: '客户投诉', createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' },
+  { id: 4, name: '服务质量', createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' },
+  { id: 5, name: '质量标准', createdAt: '2023-01-01T00:00:00Z', updatedAt: '2023-01-01T00:00:00Z' }
 ];
 
 export const mockComments: Comment[] = [
@@ -95,32 +103,41 @@ export const mockComments: Comment[] = [
     id: 1,
     articleId: 1,
     userId: 2,
+    authorName: 'Mock User 2',
     content: '这篇文章非常实用，帮助我解决了退款处理的问题。',
     parentId: null,
-    createdAt: '2023-10-26T15:00:00Z'
+    status: 'approved',
+    createdAt: '2023-10-26T15:00:00Z',
+    updatedAt: '2023-10-26T15:00:00Z'
   },
   {
     id: 2,
     articleId: 1,
     userId: 3,
+    authorName: 'Mock User 3',
     content: '我认为还可以补充一些特殊情况的处理方法。',
     parentId: 1,
-    createdAt: '2023-10-26T16:00:00Z'
+    status: 'approved',
+    createdAt: '2023-10-26T16:00:00Z',
+    updatedAt: '2023-10-26T16:00:00Z'
   },
   {
     id: 3,
     articleId: 2,
     userId: 1,
+    authorName: 'Mock User 1',
     content: '这些投诉处理技巧非常有帮助，已经在团队中分享了。',
     parentId: null,
-    createdAt: '2023-10-27T14:00:00Z'
+    status: 'approved',
+    createdAt: '2023-10-27T14:00:00Z',
+    updatedAt: '2023-10-27T14:00:00Z'
   }
 ];
 
 export const mockStats: OverallStats = {
-  articleCount: 3,
-  categoryCount: 4,
-  tagCount: 5,
+  articleCount: 28,
+  categoryCount: 5,
+  tagCount: 16,
   viewCount: 470,
   commentCount: 3,
   userCount: 10

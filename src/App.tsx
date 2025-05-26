@@ -9,6 +9,7 @@ import CategoryList from './pages/categories/CategoryList';
 import TagList from './pages/tags/TagList';
 import Stats from './pages/stats/Stats';
 import CommentManagement from './pages/comments/CommentManagement';
+import IdentityManagement from './pages/identity/IdentityManagement';
 
 function App() {
   return (
@@ -52,6 +53,11 @@ function App() {
         <Route path="/stats" element={
           <MainLayout>
             <Stats />
+          </MainLayout>
+        } />
+        <Route path="/identity" element={
+          <MainLayout>
+            <IdentityManagement />
           </MainLayout>
         } />
       </Routes>
