@@ -25,7 +25,7 @@ import {
 function createSuccessResponse<T>(data: T): BaseResponse<T> {
   return {
     code: '200',
-    msg: '操作成功',
+    msg: 'Operation successful',
     data
   };
 }
@@ -71,7 +71,7 @@ export const mockArticlesApi = {
       
       return createSuccessResponse(paginatedData);
     } catch (error) {
-      return createErrorResponse('获取文章列表失败');
+      return createErrorResponse('Failed to fetch articles');
     }
   },
 
@@ -82,12 +82,12 @@ export const mockArticlesApi = {
       const article = mockArticles.find(a => a.id === id);
       
       if (!article) {
-        return createErrorResponse('文章不存在', '404');
+        return createErrorResponse('Article not found', '404');
       }
       
       return createSuccessResponse(article);
     } catch (error) {
-      return createErrorResponse('获取文章详情失败');
+      return createErrorResponse('Failed to fetch article details');
     }
   },
 
@@ -106,7 +106,7 @@ export const mockArticlesApi = {
         categoryId: article.categoryId,
         categoryName,
         authorId: article.authorId,
-        authorName: '当前用户',
+        authorName: 'Current User',
         tagIds: article.tagIds || [],
         status: article.status,
         viewCount: 0,
@@ -119,7 +119,7 @@ export const mockArticlesApi = {
       
       return createSuccessResponse(newArticle);
     } catch (error) {
-      return createErrorResponse('创建文章失败');
+      return createErrorResponse('Failed to create article');
     }
   },
 
@@ -130,7 +130,7 @@ export const mockArticlesApi = {
       const index = mockArticles.findIndex(a => a.id === id);
       
       if (index === -1) {
-        return createErrorResponse('文章不存在', '404');
+        return createErrorResponse('Article not found', '404');
       }
       
       const categoryName = mockCategories.find(c => c.id === article.categoryId)?.name || mockArticles[index].categoryName;
@@ -151,7 +151,7 @@ export const mockArticlesApi = {
       
       return createSuccessResponse(updatedArticle);
     } catch (error) {
-      return createErrorResponse('更新文章失败');
+      return createErrorResponse('Failed to update article');
     }
   },
 
@@ -162,14 +162,14 @@ export const mockArticlesApi = {
       const index = mockArticles.findIndex(a => a.id === id);
       
       if (index === -1) {
-        return createErrorResponse('文章不存在', '404');
+        return createErrorResponse('Article not found', '404');
       }
       
       mockArticles.splice(index, 1);
       
       return createSuccessResponse(null);
     } catch (error) {
-      return createErrorResponse('删除文章失败');
+      return createErrorResponse('Failed to delete article');
     }
   },
 
@@ -180,17 +180,17 @@ export const mockArticlesApi = {
       const article = mockArticles.find(a => a.id === id);
       
       if (!article) {
-        return createErrorResponse('文章不存在', '404');
+        return createErrorResponse('Article not found', '404');
       }
       
       article.likeCount += 1;
       
       return createSuccessResponse({
-        message: '点赞成功',
+        message: 'Liked successfully',
         likeCount: article.likeCount
       });
     } catch (error) {
-      return createErrorResponse('点赞失败');
+      return createErrorResponse('Failed to like');
     }
   },
 
@@ -201,17 +201,17 @@ export const mockArticlesApi = {
       const article = mockArticles.find(a => a.id === id);
       
       if (!article) {
-        return createErrorResponse('文章不存在', '404');
+        return createErrorResponse('Article not found', '404');
       }
       
       article.viewCount += 1;
       
       return createSuccessResponse({
-        message: '浏览记录成功',
+        message: 'View recorded successfully',
         viewCount: article.viewCount
       });
     } catch (error) {
-      return createErrorResponse('记录浏览失败');
+      return createErrorResponse('Failed to record view');
     }
   }
 };
@@ -231,7 +231,7 @@ export const mockCommentsApi = {
       
       return createSuccessResponse(paginatedData);
     } catch (error) {
-      return createErrorResponse('获取评论列表失败');
+      return createErrorResponse('Failed to fetch comments');
     }
   },
 
@@ -242,7 +242,7 @@ export const mockCommentsApi = {
       const article = mockArticles.find(a => a.id === articleId);
       
       if (!article) {
-        return createErrorResponse('文章不存在', '404');
+        return createErrorResponse('Article not found', '404');
       }
       
       const newId = Math.max(...mockComments.map(c => c.id), 0) + 1;
@@ -260,7 +260,7 @@ export const mockCommentsApi = {
       
       return createSuccessResponse(newComment);
     } catch (error) {
-      return createErrorResponse('创建评论失败');
+      return createErrorResponse('Failed to create comment');
     }
   },
 
@@ -271,14 +271,50 @@ export const mockCommentsApi = {
       const index = mockComments.findIndex(c => c.id === id);
       
       if (index === -1) {
-        return createErrorResponse('评论不存在', '404');
+        return createErrorResponse('Comment not found', '404');
       }
       
       mockComments.splice(index, 1);
       
       return createSuccessResponse(null);
     } catch (error) {
-      return createErrorResponse('删除评论失败');
+      return createErrorResponse('Failed to delete comment');
+    }
+  },
+  
+  updateCommentStatus: async (id: number, status: string): Promise<BaseResponse<Comment>> => {
+    await delay();
+    try {
+        const comment = mockComments.find(c => c.id === id);
+        if (!comment) {
+            return createErrorResponse('Comment not found', '404');
+        }
+        comment.status = status;
+        comment.updatedAt = new Date().toISOString();
+        return createSuccessResponse(comment);
+    } catch (error) {
+        return createErrorResponse('Failed to update comment status');
+    }
+  },
+
+  getAllComments: async (params?: { page?: number; pageSize?: number, status?: string, keyword?: string }): Promise<BaseResponse<PageInfo<Comment>>> => {
+    await delay();
+    
+    try {
+      const filteredComments = mockComments.filter(c => 
+        (params?.status ? c.status === params.status : true) &&
+        (params?.keyword ? c.content.toLowerCase().includes(params.keyword.toLowerCase()) : true)
+      );
+      
+      const paginatedData = createPaginatedResponse(
+        filteredComments,
+        params?.page || 1,
+        params?.pageSize || 10
+      );
+      
+      return createSuccessResponse(paginatedData);
+    } catch (error) {
+      return createErrorResponse('Failed to fetch comments');
     }
   }
 };
@@ -302,7 +338,7 @@ export const mockCategoriesApi = {
       
       return createSuccessResponse(paginatedData);
     } catch (error) {
-      return createErrorResponse('获取分类列表失败');
+      return createErrorResponse('Failed to fetch categories');
     }
   },
 
@@ -313,57 +349,55 @@ export const mockCategoriesApi = {
       const category = mockCategories.find(c => c.id === id);
       
       if (!category) {
-        return createErrorResponse('分类不存在', '404');
+        return createErrorResponse('Category not found', '404');
       }
       
       return createSuccessResponse(category);
     } catch (error) {
-      return createErrorResponse('获取分类详情失败');
+      return createErrorResponse('Failed to fetch category details');
     }
   },
 
-  createCategory: async (category: Category): Promise<BaseResponse<Category>> => {
+  createCategory: async (category: Partial<Category>): Promise<BaseResponse<Category>> => {
     await delay();
     
     try {
       const newId = Math.max(...mockCategories.map(c => c.id)) + 1;
       
       const newCategory: Category = {
-        ...category,
-        id: newId
+        id: newId,
+        name: category.name || '',
+        description: category.description || '',
+        parentId: category.parentId || null,
+        sortOrder: category.sortOrder || 0,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       mockCategories.push(newCategory);
       
       return createSuccessResponse(newCategory);
     } catch (error) {
-      return createErrorResponse('创建分类失败');
+      return createErrorResponse('Failed to create category');
     }
   },
 
-  updateCategory: async (id: number, category: Category): Promise<BaseResponse<Category>> => {
+  updateCategory: async (id: number, category: Partial<Category>): Promise<BaseResponse<Category>> => {
     await delay();
     
     try {
       const index = mockCategories.findIndex(c => c.id === id);
       
       if (index === -1) {
-        return createErrorResponse('分类不存在', '404');
+        return createErrorResponse('Category not found', '404');
       }
       
-      const updatedCategory: Category = {
-        ...mockCategories[index],
-        name: category.name,
-        description: category.description,
-        parentId: category.parentId,
-        sortOrder: category.sortOrder
-      };
+      const updatedCategory = { ...mockCategories[index], ...category, updatedAt: new Date().toISOString() };
+      mockCategories[index] = updatedCategory as Category;
       
-      mockCategories[index] = updatedCategory;
-      
-      return createSuccessResponse(updatedCategory);
+      return createSuccessResponse(updatedCategory as Category);
     } catch (error) {
-      return createErrorResponse('更新分类失败');
+      return createErrorResponse('Failed to update category');
     }
   },
 
@@ -374,7 +408,7 @@ export const mockCategoriesApi = {
       const index = mockCategories.findIndex(c => c.id === id);
       
       if (index === -1) {
-        return createErrorResponse('分类不存在', '404');
+        return createErrorResponse('Category not found', '404');
       }
       
       const hasChildren = mockCategories.some(c => c.parentId === id);
@@ -387,7 +421,7 @@ export const mockCategoriesApi = {
       
       return createSuccessResponse(null);
     } catch (error) {
-      return createErrorResponse('删除分类失败');
+      return createErrorResponse('Failed to delete category');
     }
   }
 };
@@ -412,7 +446,7 @@ export const mockTagsApi = {
       
       return createSuccessResponse(paginatedData);
     } catch (error) {
-      return createErrorResponse('获取标签列表失败');
+      return createErrorResponse('Failed to fetch tags');
     }
   },
 
@@ -423,16 +457,16 @@ export const mockTagsApi = {
       const tag = mockTags.find(t => t.id === id);
       
       if (!tag) {
-        return createErrorResponse('标签不存在', '404');
+        return createErrorResponse('Tag not found', '404');
       }
       
       return createSuccessResponse(tag);
     } catch (error) {
-      return createErrorResponse('获取标签详情失败');
+      return createErrorResponse('Failed to fetch tag details');
     }
   },
 
-  createTag: async (tag: Tag): Promise<BaseResponse<Tag>> => {
+  createTag: async (tag: Partial<Tag>): Promise<BaseResponse<Tag>> => {
     await delay();
     
     try {
@@ -440,37 +474,35 @@ export const mockTagsApi = {
       
       const newTag: Tag = {
         id: newId,
-        name: tag.name
+        name: tag.name || '',
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString()
       };
       
       mockTags.push(newTag);
       
       return createSuccessResponse(newTag);
     } catch (error) {
-      return createErrorResponse('创建标签失败');
+      return createErrorResponse('Failed to create tag');
     }
   },
 
-  updateTag: async (id: number, tag: Tag): Promise<BaseResponse<Tag>> => {
+  updateTag: async (id: number, tag: Partial<Tag>): Promise<BaseResponse<Tag>> => {
     await delay();
     
     try {
       const index = mockTags.findIndex(t => t.id === id);
       
       if (index === -1) {
-        return createErrorResponse('标签不存在', '404');
+        return createErrorResponse('Tag not found', '404');
       }
       
-      const updatedTag: Tag = {
-        id,
-        name: tag.name
-      };
+      const updatedTag = { ...mockTags[index], ...tag, updatedAt: new Date().toISOString() };
+      mockTags[index] = updatedTag as Tag;
       
-      mockTags[index] = updatedTag;
-      
-      return createSuccessResponse(updatedTag);
+      return createSuccessResponse(updatedTag as Tag);
     } catch (error) {
-      return createErrorResponse('更新标签失败');
+      return createErrorResponse('Failed to update tag');
     }
   },
 
@@ -481,14 +513,14 @@ export const mockTagsApi = {
       const index = mockTags.findIndex(t => t.id === id);
       
       if (index === -1) {
-        return createErrorResponse('标签不存在', '404');
+        return createErrorResponse('Tag not found', '404');
       }
       
       mockTags.splice(index, 1);
       
       return createSuccessResponse(null);
     } catch (error) {
-      return createErrorResponse('删除标签失败');
+      return createErrorResponse('Failed to delete tag');
     }
   }
 };
@@ -500,7 +532,7 @@ export const mockStatsApi = {
     try {
       return createSuccessResponse(mockStats);
     } catch (error) {
-      return createErrorResponse('获取统计数据失败');
+      return createErrorResponse('Failed to fetch statistics');
     }
   }
 };

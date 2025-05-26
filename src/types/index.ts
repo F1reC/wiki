@@ -54,9 +54,12 @@ export interface Comment {
   id: number;
   articleId: number;
   userId: number;
+  authorName?: string;
   content: string;
   parentId: number | null;
+  status: string;
   createdAt: string;
+  updatedAt: string;
 }
 
 export interface CommentCreationRequest {
@@ -71,11 +74,15 @@ export interface Category {
   description: string | null;
   parentId: number | null;
   sortOrder: number;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface Tag {
   id: number;
   name: string;
+  createdAt: string;
+  updatedAt: string;
 }
 
 export interface OverallStats {

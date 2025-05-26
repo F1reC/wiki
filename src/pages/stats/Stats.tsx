@@ -34,10 +34,10 @@ const Stats = () => {
       if (response.code === '200' && response.data) {
         setStats(response.data);
       } else {
-        setError(response.msg || '获取统计数据失败');
+        setError(response.msg || 'Failed to fetch statistics');
       }
     } catch (err) {
-      setError('获取统计数据时发生错误');
+      setError('Error fetching statistics');
       console.error(err);
     } finally {
       setLoading(false);
@@ -49,15 +49,15 @@ const Stats = () => {
   }, []);
 
   const chartData = stats ? [
-    { name: '文章', value: stats.articleCount, color: '#4f46e5' },
-    { name: '分类', value: stats.categoryCount, color: '#0ea5e9' },
-    { name: '标签', value: stats.tagCount, color: '#10b981' },
-    { name: '评论', value: stats.commentCount || 0, color: '#f59e0b' },
-    { name: '用户', value: stats.userCount || 0, color: '#ef4444' }
+    { name: 'Articles', value: stats.articleCount, color: '#4f46e5' },
+    { name: 'Categories', value: stats.categoryCount, color: '#0ea5e9' },
+    { name: 'Tags', value: stats.tagCount, color: '#10b981' },
+    { name: 'Comments', value: stats.commentCount || 0, color: '#f59e0b' },
+    { name: 'Users', value: stats.userCount || 0, color: '#ef4444' }
   ] : [];
 
   if (loading) {
-    return <div className="container mx-auto py-8 text-center">加载中...</div>;
+    return <div className="container mx-auto py-8 text-center">Loading...</div>;
   }
 
   if (error) {
@@ -74,7 +74,7 @@ const Stats = () => {
     return (
       <div className="container mx-auto py-8">
         <Alert variant="destructive">
-          <AlertDescription>无法获取统计数据</AlertDescription>
+          <AlertDescription>Unable to fetch statistics</AlertDescription>
         </Alert>
       </div>
     );
@@ -82,12 +82,12 @@ const Stats = () => {
 
   return (
     <div className="container mx-auto py-6">
-      <h1 className="text-2xl font-bold mb-6">知识库统计</h1>
+      <h1 className="text-2xl font-bold mb-6">Knowledge Base Statistics</h1>
 
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">文章总数</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Articles</CardTitle>
             <FileText className="h-4 w-4 text-indigo-600" />
           </CardHeader>
           <CardContent>
@@ -97,7 +97,7 @@ const Stats = () => {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">分类总数</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Categories</CardTitle>
             <FolderTree className="h-4 w-4 text-blue-500" />
           </CardHeader>
           <CardContent>
@@ -107,7 +107,7 @@ const Stats = () => {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">标签总数</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Tags</CardTitle>
             <TagIcon className="h-4 w-4 text-emerald-600" />
           </CardHeader>
           <CardContent>
@@ -117,7 +117,7 @@ const Stats = () => {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">总浏览量</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Views</CardTitle>
             <Eye className="h-4 w-4 text-violet-600" />
           </CardHeader>
           <CardContent>
@@ -127,7 +127,7 @@ const Stats = () => {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">评论总数</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Comments</CardTitle>
             <MessageSquare className="h-4 w-4 text-amber-500" />
           </CardHeader>
           <CardContent>
@@ -137,7 +137,7 @@ const Stats = () => {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">用户总数</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Users</CardTitle>
             <Users className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -148,7 +148,7 @@ const Stats = () => {
 
       <Card className="mb-8">
         <CardHeader>
-          <CardTitle>数据统计图表</CardTitle>
+          <CardTitle>Statistics Chart</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="h-80">

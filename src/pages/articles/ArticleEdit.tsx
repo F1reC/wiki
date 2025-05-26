@@ -49,10 +49,10 @@ const ArticleEdit = () => {
         setSelectedTagIds(article.tagIds || []);
         setStatus(String(article.status)); // Explicitly cast to string, though should be string type
       } else {
-        setError(response.msg || '获取文章详情失败');
+        setError(response.msg || 'Failed to fetch article details');
       }
     } catch (err) {
-      setError('获取文章详情时发生错误');
+      setError('Error fetching article details');
       console.error(err);
     } finally {
       setLoading(false);
@@ -66,7 +66,7 @@ const ArticleEdit = () => {
         setCategories(response.data.list);
       }
     } catch (err) {
-      console.error('获取分类列表失败', err);
+      console.error('Failed to fetch categories', err);
     }
   };
 
@@ -77,7 +77,7 @@ const ArticleEdit = () => {
         setTags(response.data.list);
       }
     } catch (err) {
-      console.error('获取标签列表失败', err);
+      console.error('Failed to fetch tags', err);
     }
   };
 
@@ -91,19 +91,19 @@ const ArticleEdit = () => {
 
   const validateForm = () => {
     if (!title.trim()) {
-      setError('标题不能为空');
+      setError('Title cannot be empty');
       return false;
     }
     if (!content.trim()) {
-      setError('内容不能为空');
+      setError('Content cannot be empty');
       return false;
     }
     if (!summary.trim()) {
-      setError('摘要不能为空');
+      setError('Summary cannot be empty');
       return false;
     }
     if (!categoryId) {
-      setError('请选择分类');
+      setError('Please select a category');
       return false;
     }
     return true;
@@ -128,12 +128,12 @@ const ArticleEdit = () => {
         
         const response = await articlesApi.updateArticle(parseInt(id), articleData);
         if (response.code === '200') {
-          setSuccess('文章更新成功');
+          setSuccess('Article updated successfully');
           setTimeout(() => {
             navigate(`/articles/${id}`);
           }, 1500);
         } else {
-          setError(response.msg || '更新文章失败');
+          setError(response.msg || 'Failed to update article');
         }
       } else {
         const articleData: ArticleCreationRequest = {
@@ -149,16 +149,16 @@ const ArticleEdit = () => {
         const response = await articlesApi.createArticle(articleData);
         if (response.code === '200' && response.data) {
           const newArticleId = response.data.id;
-          setSuccess('文章创建成功');
+          setSuccess('Article created successfully');
           setTimeout(() => {
             navigate(`/articles/${newArticleId}`);
           }, 1500);
         } else {
-          setError(response.msg || '创建文章失败');
+          setError(response.msg || 'Failed to create article');
         }
       }
     } catch (err) {
-      setError('保存文章时发生错误');
+      setError('Error saving article');
       console.error(err);
     } finally {
       setSaveLoading(false);
@@ -176,16 +176,16 @@ const ArticleEdit = () => {
   };
 
   if (loading) {
-    return <div className="container mx-auto py-8 text-center">加载中...</div>;
+    return <div className="container mx-auto py-8 text-center">Loading...</div>;
   }
 
   return (
     <div className="container mx-auto py-6">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">{isEditing ? '编辑文章' : '创建文章'}</h1>
+        <h1 className="text-2xl font-bold">{isEditing ? 'Edit Article' : 'Create Article'}</h1>
         <Button variant="outline" onClick={() => navigate(-1)}>
           <ArrowLeft className="mr-2 h-4 w-4" />
-          返回
+          Back
         </Button>
       </div>
 
@@ -203,24 +203,24 @@ const ArticleEdit = () => {
 
       <Card>
         <CardHeader>
-          <CardTitle>文章信息</CardTitle>
+          <CardTitle>Article Information</CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="title">标题</Label>
+            <Label htmlFor="title">Title</Label>
             <Input
               id="title"
-              placeholder="请输入文章标题"
+              placeholder="Enter article title"
               value={title}
               onChange={(e) => setTitle(e.target.value)}
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="summary">摘要</Label>
+            <Label htmlFor="summary">Summary</Label>
             <Textarea
               id="summary"
-              placeholder="请输入文章摘要"
+              placeholder="Enter article summary"
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
               rows={3}
@@ -228,10 +228,10 @@ const ArticleEdit = () => {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="content">内容</Label>
+            <Label htmlFor="content">Content</Label>
             <Textarea
               id="content"
-              placeholder="请输入文章内容"
+              placeholder="Enter article content"
               value={content}
               onChange={(e) => setContent(e.target.value)}
               rows={10}
@@ -240,16 +240,18 @@ const ArticleEdit = () => {
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <Label htmlFor="category">分类</Label>
+              <Label htmlFor="category">Category</Label>
               <Select
                 value={categoryId?.toString() || ''}
                 onValueChange={(value) => setCategoryId(parseInt(value))}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="选择分类" />
+                  <SelectValue placeholder="Select category" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="placeholder" disabled>选择分类</SelectItem>
+                  {/* The following SelectItem was originally in Chinese and is commented out as it might be a placeholder or unused 
+                  <SelectItem value="placeholder" disabled>选择分类</SelectItem> 
+                  */} 
                   {categories.map((category) => (
                     <SelectItem key={category.id} value={category.id.toString()}>
                       {category.name}
@@ -260,21 +262,21 @@ const ArticleEdit = () => {
             </div>
 
             <div className="space-y-2">
-              <Label htmlFor="status">状态</Label>
-              <Select value={status} onValueChange={setStatus}>
+              <Label htmlFor="status">Status</Label>
+              <Select value={status.toString()} onValueChange={(value) => setStatus(String(value))}> 
                 <SelectTrigger>
-                  <SelectValue placeholder="选择状态" />
+                  <SelectValue placeholder="Select status" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="published">已发布</SelectItem>
-                  <SelectItem value="draft">草稿</SelectItem>
+                  <SelectItem value="1">Published</SelectItem> 
+                  <SelectItem value="0">Draft</SelectItem>
                 </SelectContent>
               </Select>
             </div>
           </div>
 
           <div className="space-y-2">
-            <Label>标签</Label>
+            <Label>Tags</Label>
             <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
               {tags.map((tag) => (
                 <div key={tag.id} className="flex items-center space-x-2">
@@ -283,7 +285,7 @@ const ArticleEdit = () => {
                     checked={selectedTagIds.includes(tag.id)}
                     onCheckedChange={() => handleTagToggle(tag.id)}
                   />
-                  <Label htmlFor={`tag-${tag.id}`} className="cursor-pointer">
+                  <Label htmlFor={`tag-${tag.id}`} className="font-normal">
                     {tag.name}
                   </Label>
                 </div>
@@ -294,7 +296,7 @@ const ArticleEdit = () => {
         <CardFooter className="flex justify-end">
           <Button onClick={handleSave} disabled={saveLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {saveLoading ? '保存中...' : '保存文章'}
+            {saveLoading ? 'Saving...' : 'Save Article'} 
           </Button>
         </CardFooter>
       </Card>

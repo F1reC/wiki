@@ -60,10 +60,10 @@ const ArticleList = () => {
           isLastPage: response.data.isLastPage
         });
       } else {
-        setError(response.msg || '获取文章列表失败');
+        setError(response.msg || 'Failed to fetch articles');
       }
     } catch (err) {
-      setError('获取文章列表时发生错误');
+      setError('Error fetching articles');
       console.error(err);
     } finally {
       setLoading(false);
@@ -85,7 +85,7 @@ const ArticleList = () => {
         console.error('Failed to fetch tags:', response.msg);
       }
     } catch (err) {
-      console.error('获取标签列表失败', err);
+      console.error('Failed to fetch tags', err);
     }
   };
 
@@ -117,7 +117,7 @@ const ArticleList = () => {
 
   const formatDate = (dateString: string) => {
     const date = new Date(dateString);
-    return date.toLocaleDateString('zh-CN', {
+    return date.toLocaleDateString('en-US', {
       year: 'numeric',
       month: '2-digit',
       day: '2-digit',
@@ -129,11 +129,11 @@ const ArticleList = () => {
   return (
     <div className="container mx-auto">
       <div className="flex justify-between items-center mb-6">
-        <h1 className="text-2xl font-bold">文章列表</h1>
+        <h1 className="text-2xl font-bold">Article List</h1>
         <Link to="/articles/create">
           <Button>
             <Plus className="mr-2 h-4 w-4" />
-            新建文章
+            New Article
           </Button>
         </Link>
       </div>
@@ -142,7 +142,7 @@ const ArticleList = () => {
         <div className="md:col-span-3">
           <div className="flex gap-2">
             <Input
-              placeholder="搜索文章..."
+              placeholder="Search articles..."
               value={keyword}
               onChange={(e) => setKeyword(e.target.value)}
               className="flex-1"
@@ -155,22 +155,22 @@ const ArticleList = () => {
         <div className="flex gap-2">
           <Select onValueChange={handleSortChange} defaultValue={sort}>
             <SelectTrigger>
-              <SelectValue placeholder="排序字段" />
+              <SelectValue placeholder="Sort by" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="created_at">创建时间</SelectItem>
-              <SelectItem value="updated_at">更新时间</SelectItem>
-              <SelectItem value="view_count">浏览量</SelectItem>
-              <SelectItem value="like_count">点赞数</SelectItem>
+              <SelectItem value="created_at">Created Time</SelectItem>
+              <SelectItem value="updated_at">Updated Time</SelectItem>
+              <SelectItem value="view_count">View Count</SelectItem>
+              <SelectItem value="like_count">Like Count</SelectItem>
             </SelectContent>
           </Select>
           <Select onValueChange={handleOrderChange} defaultValue={order}>
             <SelectTrigger>
-              <SelectValue placeholder="排序方式" />
+              <SelectValue placeholder="Sort Order" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="desc">降序</SelectItem>
-              <SelectItem value="asc">升序</SelectItem>
+              <SelectItem value="desc">Descending</SelectItem>
+              <SelectItem value="asc">Ascending</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -183,18 +183,18 @@ const ArticleList = () => {
             <CardHeader>
               <CardTitle className="flex items-center">
                 <Filter className="mr-2 h-4 w-4" />
-                筛选
+                Filter
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <label className="text-sm font-medium mb-1 block">标签</label>
+                <label className="text-sm font-medium mb-1 block">Tags</label>
                 <Select onValueChange={handleTagChange}>
                   <SelectTrigger>
-                    <SelectValue placeholder="选择标签" />
+                    <SelectValue placeholder="Select tag" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="all-tags">全部标签</SelectItem>
+                    <SelectItem value="all-tags">All Tags</SelectItem>
                     {tags.map((tag) => (
                       <SelectItem key={tag.id} value={tag.id.toString()}>
                         {tag.name}
@@ -210,11 +210,11 @@ const ArticleList = () => {
         {/* Article list */}
         <div className="md:col-span-3">
           {loading ? (
-            <div className="text-center py-8">加载中...</div>
+            <div className="text-center py-8">Loading...</div>
           ) : error ? (
             <div className="text-center py-8 text-red-500">{error}</div>
           ) : articles.length === 0 ? (
-            <div className="text-center py-8">暂无文章</div>
+            <div className="text-center py-8">No articles found</div>
           ) : (
             <div className="space-y-4">
               {articles.map((article) => (
