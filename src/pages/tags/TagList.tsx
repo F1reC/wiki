@@ -6,7 +6,7 @@ import {
   Tag as TagIcon,
   Save
 } from 'lucide-react';
-import { tagsApiWithFallback as tagsApi } from '../../services/apiWithFallback';
+import { tagsApi } from '../../services/api';
 import { Tag } from '../../types';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';

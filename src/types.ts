@@ -83,7 +83,6 @@ export interface CommentPageInfo {
   size: number;    // Corresponds to pageSize in PageInfo
   current: number; // Corresponds to pageNum in PageInfo
   pages: number;
-  // Fields like list, pageNum, pageSize, isFirstPage, isLastPage are NOT directly in this API response
 }
 
 // 你可以根据需要在此文件中添加其他类型定义，例如：

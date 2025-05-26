@@ -143,7 +143,13 @@ export const categoriesApi = {
 
 export const tagsApi = {
   getTags: async (params?: { keyword?: string; page?: number; pageSize?: number }) => {
-    const response = await api.get<BaseResponse<PageInfo<Tag>>>('/tags', { params });
+    const apiParams: { keyword?: string; page?: number; page_size?: number } = {};
+    if (params) {
+      if (params.keyword) apiParams.keyword = params.keyword;
+      if (params.page) apiParams.page = params.page;
+      if (params.pageSize) apiParams.page_size = params.pageSize;
+    }
+    const response = await api.get<BaseResponse<PageInfo<Tag>>>('/tags', { params: apiParams });
     return response.data;
   },
 
