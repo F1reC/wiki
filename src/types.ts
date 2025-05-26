@@ -24,13 +24,13 @@ export interface Article {
   id: number;
   title: string;
   summary: string;
-  content?: string; // 完整内容可能在详情页才加载
+  content: string; // 完整内容可能在详情页才加载
   categoryId: number;
   categoryName?: string;
   authorId?: number;
   authorName?: string;
   tagIds?: number[]; // 假设是 ID 列表
-  status?: number;
+  status: string; // published, draft etc.
   viewCount: number;
   likeCount: number;
   createdAt: string;
@@ -50,6 +50,30 @@ export interface Category {
 export interface Tag {
   id: number;
   name: string;
+}
+
+// Chat API 响应类型
+export type ChatResponse = string;
+
+// 文章创建请求类型
+export interface ArticleCreationRequest {
+  title: string;
+  content: string;
+  summary: string;
+  categoryId: number;
+  tag_ids?: number[]; // API expects tag_ids
+  authorId: number; // Assuming authorId is required for creation
+  status: string; // e.g., "published", "draft"
+}
+
+// 文章更新请求类型
+export interface ArticleUpdateRequest {
+  title: string;
+  content: string;
+  summary: string;
+  categoryId: number;
+  tag_ids?: number[]; // API expects tag_ids
+  status: string; // e.g., "published", "draft"
 }
 
 // 你可以根据需要在此文件中添加其他类型定义，例如：

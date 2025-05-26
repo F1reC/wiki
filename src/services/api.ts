@@ -87,7 +87,7 @@ export const commentsApi = {
   },
 
   deleteComment: async (id: number) => {
-    const response = await api.delete<BaseResponse<null>>(`/articles/comments/${id}`);
+    const response = await api.delete<BaseResponse<null>>(`/comments/${id}`);
     return response.data;
   },
 };
@@ -152,5 +152,12 @@ export const statsApi = {
     return response.data;
   },
 };
+
+export const chatApi = {
+  getChatResponse: async (msg: string) => {
+    const response = await axios.get<string>(`http://localhost:8080/ai/chat`, { params: { msg } });
+    return response.data;
+  }
+}
 
 export default api;

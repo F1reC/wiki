@@ -9,7 +9,7 @@ import {
   Send, 
   Trash2 
 } from 'lucide-react';
-import { articlesApiWithFallback as articlesApi, commentsApiWithFallback as commentsApi } from '../../services/apiWithFallback';
+import { articlesApi, commentsApi } from '../../services/api';
 import { Article, Comment } from '../../types';
 import { Button } from '../../components/ui/button';
 import { Card, CardContent, CardFooter, CardHeader } from '../../components/ui/card';

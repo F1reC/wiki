@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { Save, ArrowLeft } from 'lucide-react';
-import { articlesApiWithFallback as articlesApi, categoriesApiWithFallback as categoriesApi, tagsApiWithFallback as tagsApi } from '../../services/apiWithFallback';
+import { articlesApi, categoriesApi, tagsApi } from '../../services/api';
 import { Category, Tag, ArticleCreationRequest, ArticleUpdateRequest } from '../../types';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -22,7 +22,7 @@ const ArticleEdit = () => {
   const [summary, setSummary] = useState('');
   const [categoryId, setCategoryId] = useState<number | null>(null);
   const [selectedTagIds, setSelectedTagIds] = useState<number[]>([]);
-  const [status, setStatus] = useState(1); // 1 = published, 0 = draft
+  const [status, setStatus] = useState<string>('published'); // Explicitly string
   
   const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
@@ -47,7 +47,7 @@ const ArticleEdit = () => {
         setSummary(article.summary);
         setCategoryId(article.categoryId);
         setSelectedTagIds(article.tagIds || []);
-        setStatus(article.status);
+        setStatus(String(article.status)); // Explicitly cast to string, though should be string type
       } else {
         setError(response.msg || '获取文章详情失败');
       }
@@ -122,8 +122,8 @@ const ArticleEdit = () => {
           content,
           summary,
           categoryId: categoryId!,
-          tagIds: selectedTagIds,
-          status
+          tag_ids: selectedTagIds,
+          status: status, // status is already a string
         };
         
         const response = await articlesApi.updateArticle(parseInt(id), articleData);
@@ -142,8 +142,8 @@ const ArticleEdit = () => {
           summary,
           categoryId: categoryId!,
           authorId: currentUserId,
-          tagIds: selectedTagIds,
-          status
+          tag_ids: selectedTagIds,
+          status: status, // status is already a string
         };
         
         const response = await articlesApi.createArticle(articleData);
@@ -261,17 +261,13 @@ const ArticleEdit = () => {
 
             <div className="space-y-2">
               <Label htmlFor="status">状态</Label>
-              <Select
-                value={status.toString()}
-                onValueChange={(value) => setStatus(parseInt(value))}
-              >
+              <Select value={status} onValueChange={setStatus}>
                 <SelectTrigger>
                   <SelectValue placeholder="选择状态" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="status-placeholder" disabled>选择状态</SelectItem>
-                  <SelectItem value="1">已发布</SelectItem>
-                  <SelectItem value="0">草稿</SelectItem>
+                  <SelectItem value="published">已发布</SelectItem>
+                  <SelectItem value="draft">草稿</SelectItem>
                 </SelectContent>
               </Select>
             </div>

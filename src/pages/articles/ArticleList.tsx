@@ -8,9 +8,9 @@ import {
   ThumbsUp, 
   Calendar
 } from 'lucide-react';
-import { articlesApiWithFallback as articlesApi } from '../../services/apiWithFallback';
-import { categoriesApiWithFallback as categoriesApi } from '../../services/apiWithFallback';
-import { tagsApiWithFallback as tagsApi } from '../../services/apiWithFallback';
+import { articlesApi } from '../../services/api';
+import { categoriesApi } from '../../services/api';
+import { tagsApi } from '../../services/api';
 import { Article, Category, Tag, PageInfo } from '../../types';
 import { Button } from '../../components/ui/button';
 import { Input } from '../../components/ui/input';
@@ -77,12 +77,12 @@ const ArticleList = () => {
     try {
       const response = await categoriesApi.getCategories({ pageSize: 100 });
       if (response.code === '200' && response.data) {
-        const categoryList = response.data.list || response.data.records;
+        const categoryList = response.data.list;
         if (categoryList) {
           setCategories(categoryList);
         } else {
           setCategories([]);
-          console.error('Failed to fetch categories: list or records not found in response data');
+          console.error('Failed to fetch categories: list not found in response data');
         }
       } else {
         console.error('Failed to fetch categories:', response.msg);
@@ -96,12 +96,12 @@ const ArticleList = () => {
     try {
       const response = await tagsApi.getTags({ pageSize: 100 });
       if (response.code === '200' && response.data) {
-        const tagList = response.data.list || response.data.records;
+        const tagList = response.data.list;
         if (tagList) {
           setTags(tagList);
         } else {
           setTags([]);
-          console.error('Failed to fetch tags: list or records not found in response data');
+          console.error('Failed to fetch tags: list not found in response data');
         }
       } else {
         console.error('Failed to fetch tags:', response.msg);
