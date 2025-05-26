@@ -20,7 +20,6 @@ import { Pagination, PaginationContent, PaginationItem, PaginationLink, Paginati
 
 const ArticleList = () => {
   const [articles, setArticles] = useState<Article[]>([]);
-  const [categories, setCategories] = useState<Category[]>([]);
   const [tags, setTags] = useState<Tag[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -33,7 +32,6 @@ const ArticleList = () => {
     isLastPage: false
   });
   
-  const [categoryId, setCategoryId] = useState<number | undefined>(undefined);
   const [tagId, setTagId] = useState<number | undefined>(undefined);
   const [keyword, setKeyword] = useState('');
   const [sort, setSort] = useState('created_at');
@@ -43,7 +41,6 @@ const ArticleList = () => {
     setLoading(true);
     try {
       const response = await articlesApi.getArticles({
-        categoryId,
         tagId,
         keyword,
         sort,
@@ -73,25 +70,6 @@ const ArticleList = () => {
     }
   };
 
-  const fetchCategories = async () => {
-    try {
-      const response = await categoriesApi.getCategories({ pageSize: 100 });
-      if (response.code === '200' && response.data) {
-        const categoryList = response.data.list;
-        if (categoryList) {
-          setCategories(categoryList);
-        } else {
-          setCategories([]);
-          console.error('Failed to fetch categories: list not found in response data');
-        }
-      } else {
-        console.error('Failed to fetch categories:', response.msg);
-      }
-    } catch (err) {
-      console.error('Error fetching categories:', err);
-    }
-  };
-
   const fetchTags = async () => {
     try {
       const response = await tagsApi.getTags({ pageSize: 100 });
@@ -113,9 +91,8 @@ const ArticleList = () => {
 
   useEffect(() => {
     fetchArticles();
-    fetchCategories();
     fetchTags();
-  }, [pagination.pageNum, categoryId, tagId, /* keyword, */ sort, order]);
+  }, [pagination.pageNum, tagId, sort, order]);
 
   const handleSearch = () => {
     setPagination(prev => ({ ...prev, pageNum: 1 }));
@@ -124,10 +101,6 @@ const ArticleList = () => {
 
   const handlePageChange = (page: number) => {
     setPagination(prev => ({ ...prev, pageNum: page }));
-  };
-
-  const handleCategoryChange = (value: string) => {
-    setCategoryId(value === 'all-categories' ? undefined : parseInt(value));
   };
 
   const handleTagChange = (value: string) => {
@@ -214,22 +187,6 @@ const ArticleList = () => {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div>
-                <label className="text-sm font-medium mb-1 block">分类</label>
-                <Select onValueChange={handleCategoryChange}>
-                  <SelectTrigger>
-                    <SelectValue placeholder="选择分类" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="all-categories">全部分类</SelectItem>
-                    {categories.map((category) => (
-                      <SelectItem key={category.id} value={category.id.toString()}>
-                        {category.name}
-                      </SelectItem>
-                    ))}
-                  </SelectContent>
-                </Select>
-              </div>
               <div>
                 <label className="text-sm font-medium mb-1 block">标签</label>
                 <Select onValueChange={handleTagChange}>
